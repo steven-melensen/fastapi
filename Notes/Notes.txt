@@ -1,0 +1,90 @@
+To create the venv: py -3 -m venv venv
+To activate the venv : "venv/Scripts/activate.bat", if not working ".\venv\Scripts\Activate.ps1"
+
+.\venv\Scripts\Activate.ps1
+uvicorn main:app --reload
+
+Install fast api: pip install fastapi[all]
+Install psycopg2: pip install psycopg2
+Install SQL Alchemy:  pip install sqlalchemy==1.4.23
+
+To run the server : uvicorn main:app (python function:FastAPI() object)
+
+To not have to restart the server everytime 
+we make a change, we use this instead: 
+uvicorn main:app --reload
+
+this restarts the server automatically everytime we save
+
+Postman is the software to use to test the API
+
+To see the documentation for the API, go to: http://127.0.0.1:8000/docs
+
+If the main.oy file is in another ofler (like "app")  run the API the following way:
+uvicorn app.main:app --reload
+
+In postgres, the serial datatype allows the id creation handling
+
+
+To hash passwords, start by doing <pip install "passlib[bcrypt]">
+
+
+# Alembic
+pip install alembic
+Create a new revision: alembic revision -m "My Comment". This comment creates a new python file under alembic>version                 
+alembic upgrade head # does all the upgrades up to the latest one
+alembic upgrade +1 # plus one level ahead (could be +2, +3...)
+alembic downgrade -1 # downgrades one level (-2, -3...)
+alembic downgrade version_number_string # reverts back to the version
+alembic current # gives current version number we're activate
+alembic revision --autogenerate -m "auto-vote" # creates all the remaing tables based on our identified models in models. It create a new python file with added changes within app>models. We then need to run the alembic upgrade head command
+
+
+# pip freezing
+pip freeze > requirements.txt
+# installing
+pip install -r requirements.txt
+
+
+# Heroku
+heroku login
+heroku create fastapi-smelancon
+git push heroku main
+# URL : https://fastapi-smelancon-b116ebf2f242.herokuapp.com/
+
+
+# Github
+git add --all
+git commit -m "My Comment"
+git push origin main
+git push heroku main
+
+# Misc
+Bugs with heroku? Do: heroku logs -t
+
+
+# Heroku postgress
+heroku addons:create heroku-postgresql:essential-0
+#after modifying the environment variables
+heroku ps:restart
+retrieve heroku's URL : heroku apps:info fastapi-smelancon
+
+# Activate the database within Heroku
+heroku run "alembic upgrade head"
+
+#Testing section
+pip install pytest
+pytest #in command line
+#test files should either follow test_*.py or *_test.py naming convention
+pytest # will test everyt files following the naming convention
+# the dots (.) illustrates how many tests were passed : e.g., 3 tests = ...
+pytest tests\my_file_path.py # will test a specific file regardless of the naming convention
+# Within the file you want to test, you don't have to run the function, as long as each tested functions' name starts with test_ (def test_*())
+pytest -v # -v for verbose : allows more information to be displayed
+pytest -v -s # -s allows to display the printed statements
+pytest -v -s --disable-warnings # removes the warning messages
+pytest -v -s --disable-warnings -x # Stopping test executions after first fail
+
+
+
+
