@@ -8,7 +8,7 @@ on: [push, pull_request]
 # Jobs contain a set of steps that are executed on the same runner.
 jobs:
     # Define a job with an identifier 'job1'. Each job runs independently in separate environments.
-    job1:
+    build:
         # Specifies the environment name under which this job runs. Useful for categorizing jobs in the Actions UI.
         environment:
             name: testing
@@ -61,8 +61,12 @@ jobs:
               run: |
                 pip install pytest  # Installs pytest for running tests.
                 pytest  # Runs tests using pytest.
-
-
+    deploy: #CD part
+      runs-on: ubuntu-latest
+      needs: [build] # by default, jobs run in parallel, but we need sequential order
+      steps:
+        - name: deploying stuff
+          run: echo "going to deploy stuff"
 
 
 # The commented-out Git commands below are not part of the GitHub Actions configuration.
