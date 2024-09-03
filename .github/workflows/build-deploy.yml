@@ -1,0 +1,75 @@
+# Name of the GitHub Actions workflow
+name: Build and Deploy Code
+
+# Defines when the workflow should be triggered.
+# This workflow triggers on push events and pull requests to any branch in the repository.
+on: [push, pull_request]
+
+# Jobs contain a set of steps that are executed on the same runner.
+jobs:
+    # Define a job with an identifier 'job1'. Each job runs independently in separate environments.
+    job1:
+        # Specifies the environment name under which this job runs. Useful for categorizing jobs in the Actions UI.
+        environment:
+            name: testing
+        # Environment variables for the job. These are secret credentials and variables stored in GitHub secrets to keep them secure.
+        env:
+            DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}  # The hostname for the database server.
+            DATABASE_PORT: ${{secrets.DATABASE_PORT}}          # The port on which the database server is accessible.
+            DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}  # Password for the database, fetched from GitHub secrets.
+            DATABASE_NAME: ${{secrets.DATABASE_NAME}}          # Name of the database.
+            DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}  # Username for database authentication.
+            SECRET_KEY: ${{secrets.SECRET_KEY}}                # A secret key used for encryption or session management.
+            ALGORITHM: ${{secrets.ALGORITHM}}                  # Algorithm used for encryption or hashing.
+            ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}  # Token expiration time in minutes.
+
+        # Defines services such as databases that are needed as part of this job.
+        services:
+            postgres:
+                image: postgres  # The Docker image to use for the service.
+                env:
+                    POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}  # Environment variable for the Postgres service.
+                    POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test  # Database name, appended with '_test' for this environment.
+                ports:
+                    - 5432:5432  # Maps TCP port 5432 inside the service container to port 5432 on the host.
+                options: # Postgres defau;t configurations
+                  --health-cmd pg_isready 
+                  --health-interval 10s   
+                  --health-timeout 5s 
+                  --health-retries 5       
+
+        # Specifies the type of runner that the job will run on.
+        runs-on: ubuntu-latest  # Runs the job on the latest version of Ubuntu.
+
+        # Steps are individual tasks that run commands in a job.
+        steps:
+            - name: pulling git repo
+              uses: actions/checkout@v2  # Checks out the repository under $GITHUB_WORKSPACE, so your job can access it.
+              
+            - name: install python version 3.9
+              uses: actions/setup-python@v2  # Sets up Python 3.9 using the setup-python action.
+              with:
+                python-version: "3.9"  # Specifies the Python version to set up.
+
+            - name: update pip
+              run: python -m pip install --upgrade pip  # Updates pip to the latest version.
+
+            - name: install all dependencies
+              run: pip install -r requirements.txt  # Installs all dependencies defined in the requirements.txt file.
+
+            - name: test with pytest
+              run: |
+                pip install pytest  # Installs pytest for running tests.
+                pytest  # Runs tests using pytest.
+
+
+
+
+# The commented-out Git commands below are not part of the GitHub Actions configuration.
+# They are typical commands you might run in your local git repository:
+# git add --all  # Adds all new and changed files to the git staging area.
+# git commit -m "comment"  # Commits the staged changes to your local repository.
+# git push origin main  # Pushes the committed changes from your local repository to the 'main' branch on the remote repository.
+
+# To get dockerhub tocken: log in>click user in the upper right>Account Settings>Settings>Personal access tokens>New access token
+# Go to github and and secret environemnt variables (under settings): the envrionment variable names are shown above inside the ()
