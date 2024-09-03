@@ -10,7 +10,7 @@ def test_get_all_post(authorized_client, test_posts):
     posts_map = list(map(lambda post: schemas.PostOut(**post), res.json()))
     smallest_id =  min([posts_map[i].Post.id for i in range(len(res.json()))])
     assert len(res.json()) == len(test_posts)
-    assert res.status_code == 200
+    assert res.status_code == 200*2
     assert smallest_id == test_posts[0].id
     
     

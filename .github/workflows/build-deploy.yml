@@ -86,7 +86,7 @@ jobs:
 # They are typical commands you might run in your local git repository:
 # git add --all  # Adds all new and changed files to the git staging area.
 # git commit -m "comment"  # Commits the staged changes to your local repository.
-# git push origin main  # Pushes the committed changes from your lo cal repository to the 'main' branch on the remote repository.
+# git push origin main  # Pushes the committed changes from your local repository to the 'main' branch on the remote repository.
 
 # To get dockerhub tocken: log in>click user in the upper right>Account Settings>Settings>Personal access tokens>New access token
 # Go to github and and secret environemnt variables (under settings): the envrionment variable names are shown above inside the ()
