@@ -33,7 +33,7 @@ def root():
     Could be a login function to check username/password
     Everytime we make a change, we must restart the server
     '''
-    return {'message': 'Welcome to my api!'}
+    return {'message': 'Hello World CI/CD!'}
    
 
 
